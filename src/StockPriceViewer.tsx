@@ -76,7 +76,7 @@ export function StockPriceViewer({
             if (!isComplex) {
                 return;
             }
-            event.preventDefault();
+            // event.preventDefault();
             const delta = Math.sign(event.deltaY);
             setWindowSize(prevSize => {
                 return Math.min(101, Math.max(25, prevSize - delta));
@@ -85,7 +85,7 @@ export function StockPriceViewer({
 
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
-        canvas.addEventListener('wheel', handleWheel);
+        canvas.addEventListener('wheel', handleWheel, { passive: true });
         draw();
 
         return () => {
@@ -181,7 +181,7 @@ function updateTooltipAndLines(
     const index = Math.floor((x - 2 * xPadding) / (candlestickWidth + 2));
     if (index >= 0 && index < windowSize) {
         const alignedX = (index + 0.5) * (candlestickWidth + 2) + 2 * xPadding - 2;
-        verticalLine.style.left = `${alignedX}px`;
+        verticalLine.style.left = `${alignedX}px`; // TODO FIXME slightly misaligned
         verticalLine.style.top = `${xPadding}px`;
         verticalLine.style.bottom = `${2 * xPadding}px`;
         horizontalLine.style.top = `${y}px`;
