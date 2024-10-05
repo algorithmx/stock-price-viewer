@@ -3,18 +3,21 @@ import { StockPriceViewer, StockData } from './StockPriceViewer';
 
 async function fetchStockData(): Promise<StockData[]> {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 100));
-
-  const fakeData: StockData[] = Array.from({ length: 1000 }, () => ({
-    O: Number((Math.random() * 100 + 50).toFixed(2)),  // Open price between 50 and 150
-    C: Number((Math.random() * 100 + 50).toFixed(2)),  // Close price between 50 and 150
-    H: Number((Math.random() * 100 + 100).toFixed(2)), // High price between 100 and 200
-    L: Number((Math.random() * 50 + 25).toFixed(2)),   // Low price between 25 and 75
-  }));
-
+  await new Promise(resolve => setTimeout(resolve, 10));
+  const startDate = new Date('2024-01-01');
+  const fakeData: StockData[] = Array.from({ length: 1000 }, (_, index) => {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + index);
+    const centre = Math.random() * 5 + 50;
+    const range = Math.random() * 20 - 10;
+    const open = centre - range;
+    const close = centre + range;
+    const high = Math.max(open, close) + Math.random() * 5;
+    const low = Math.min(open, close) - Math.random() * 5;
+    return {D: date.toISOString(), O: open, C: close, H: high, L: low};
+  });
   return fakeData;
 }
-
 
 function App() {
   const [stockDataArray, setStockDataArray] = useState<StockData[][]>([]);
@@ -41,6 +44,9 @@ function App() {
       <StockPriceViewer
         stockDataArray={stockDataArray}
         setStockDataArray={setStockDataArray}
+        width={600}
+        height={300}
+        isComplex={true}
       />
     </div>
   );
